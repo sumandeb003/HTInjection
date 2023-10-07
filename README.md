@@ -383,13 +383,64 @@ if (FixedDelay == 0 && !StallRandom) begin : pass_through
  end
 ```
   - If delays are introduced, the module uses a finite state machine (FSM) with three states: `Idle`, `Valid`, and `Ready`.
-    - *Idle State*: Awaiting for the valid signal to be asserted.
-    - *Valid State*: Waiting for the delay to expire.
+    - *Idle State*: The module is waiting for the input to be valid (`valid_i` asserted).
+    - *Valid State*: The delay counter is active and counting down.
     - *Ready State*: The data is now valid and ready to be transferred out.
 
   - The state of the FSM is stored in the `state_q` register, which is updated every clock cycle based on the next state logic (`state_d`).
   - If `StallRandom` is set, the module uses a 16-bit Linear Feedback Shift Register (`lfsr_16bit`) to generate a random value, which is then used as the delay. The LFSR provides pseudorandom sequences.
   - A counter is used to introduce the delay. It's decremented every cycle and checks if it has reached zero. The length of the delay is either the `FixedDelay` parameter or the output from the LFSR (for random delays).
+
+**FSM Logic:**
+
+1. ***Idle State***:
+
+When the FSM is in the `Idle` state, it checks if the `valid_i` (input data is valid) signal is asserted. If it's not asserted, the FSM simply remains in the `Idle` state.
+
+If `valid_i` is asserted, a few scenarios can happen:
+
+  - *One Cycle Delay*: If there's supposed to be a one-cycle delay (`FixedDelay == 1`) or a random delay of one cycle is selected (`StallRandom && counter_load == 1`), then the FSM directly transitions to the `Ready` state. This effectively introduces a one-cycle delay between the input becoming valid (`valid_i` asserted) and the output being marked valid (`valid_o` asserted).
+```verilog
+// Just one cycle delay
+if (FixedDelay == 1 || (StallRandom && counter_load == 1)) begin
+    state_d = Ready;
+end
+```
+So, if the sequence of progression is:
+
+i) Cycle 1: Input is valid (valid_i is high). FSM transitions from Idle to Ready.
+ii) Cycle 2: Output is valid (valid_o is high). The data is effectively delayed by one cycle.
+
+  - *Immediate Transmission on Zero Random Delay*: In this scenario, the FSM checks if a random delay with a value of 0 is chosen. If so, it immediately asserts the `valid_o` signal without waiting for another cycle. However, the FSM only transitions to the `Ready` state if the external entity isn't ready to accept the data (`ready_i` is low). If the external entity is ready (`ready_i` is high), it directly moves back to the `Idle` state, effectively transmitting the data without any delay.
+```verilog
+if (StallRandom && counter_load == 0) begin
+    valid_o = 1'b1;
+    ready_o = ready_i;
+    if (ready_i) state_d = Idle;
+    else state_d = Ready;
+end
+```
+So, for the sequence of this progression is:
+i) Cycle 1: Input is valid (valid_i is high), and if the next module is ready (ready_i is high), the FSM stays in Idle, thereby not introducing any delay. If the next module isn't ready, it moves to Ready, waiting for it to become ready.
+
+  - *Load Delay Counter*: For any other condition, the delay counter is loaded (load signal is asserted), and the FSM transitions to the Valid state.
+
+2. ***Valid State***:
+
+In this state, the delay counter is decremented (`en` signal is asserted). The FSM waits until the counter reaches zero.
+
+Once the counter (`count_out) reaches zero, it means the delay duration has passed, and the FSM transitions to the Ready state.
+
+3. ***Ready State***:
+
+In the `Ready` state, the module's output becomes valid (`valid_o` is asserted), signifying that the data is now ready to be transmitted after the delay.
+
+The FSM then checks if the external entity (or next module) is ready to receive data (`ready_i`). If `ready_i` is high, indicating the next module is ready to accept the data, the FSM transitions back to the `Idle` state. If not, the FSM remains in the Ready state until `ready_i` is asserted.
+
+In conclusion, the FSM ensures that once the input data is valid, it either directly passes the data (for zero delay) or waits for the specified delay duration before marking the data as valid for the next entity in the pipeline.
+
+**Overall, the `ready_valid_delay` module essentially introduces either a fixed or random delay in the propagation of data from its input to its output using a combination of state machine logic, counters, and optional pseudorandom generation.**
+
 </details>
 
 </details>
