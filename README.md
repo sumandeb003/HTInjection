@@ -354,7 +354,23 @@ module ready_valid_delay #(
 
 endmodule
 ```
-  - 
+The `ready_valid_delay` module is designed to introduce delays or randomization in a ready/valid handshake mechanism, commonly used in many data transfer protocols including AXI.
+
+**Parameters:**
+  - `StallRandom`: When set, introduces random delays.
+  - `FixedDelay`: Specifies the fixed delay to be introduced.
+  - `payload_t`: The data type of the data (or payload) being transferred.
+
+**Ports:**
+Standard handshaking signals are:
+
+  - `valid_i`: Indicates that the sender has valid data.
+  - `ready_o`: Indicates that the receiver can accept data.
+  - `payload_i`: Data input.
+  - `valid_o`: Indicates that the delayed data is now valid.
+  - `ready_i`: Indicates that the next stage/module is ready to receive data.
+  - `payload_o`: Data output.
+
 </details>
 
 </details>
