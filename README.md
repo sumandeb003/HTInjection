@@ -188,7 +188,28 @@ The module has corresponding ports for the input and the output sides for each A
 
 **Instantiations:**
 
-For each AXI channel, there's an instantiation of a module named ready_valid_delay. This module presumably takes care of the actual delay mechanism - either random or fixed. 
+For each AXI channel, there's an instantiation of a module named `ready_valid_delay`. This module presumably takes care of the actual delay mechanism - either random or fixed. As an example, I show the instantiation of the `ready_valid_delay` module for `aw` channel:
+
+```verilog
+ready_valid_delay #(
+   .StallRandom ( StallRandomInput ),
+   .FixedDelay  ( FixedDelayInput  ),
+   .payload_t   ( aw_t             )
+ ) i_ready_valid_delay_aw (
+   .clk_i     ( clk_i      ),
+   .rst_ni    ( rst_ni     ),
+   .payload_i ( aw_chan_i  ),
+   .ready_o   ( aw_ready_o ),
+   .valid_i   ( aw_valid_i ),
+   .payload_o ( aw_chan_o  ),
+   .ready_i   ( aw_ready_i ),
+   .valid_o   ( aw_valid_o )
+ );
+```
+  - The parameter `StallRandom` is set to `StallRandomInput`, implying it's an input channel delay.
+  - The `FixedDelay` parameter is set to `FixedDelayInput`, specifying the fixed delay count.
+  - `payload_t` sets the datatype for the data being transmitted through this channel.
+  - The connections then map the input signals of the `axi_delayer` to the input signals of the `ready_valid_delay` module and vice versa for the output.
 
 </details>
 
