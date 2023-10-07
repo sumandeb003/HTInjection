@@ -16,12 +16,10 @@ After my experience inserting trojans in the Ariane SoC, I realized that it is a
 4. [`axi_lite_xbar.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/src/axi_lite_xbar.sv) - [`tb_axi_lite_xbar.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/test/tb_axi_lite_xbar.sv)
 5. [`axi_to_axi_lite.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/src/axi_to_axi_lite.sv) - [`tb_axi_to_axi_lite.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/test/tb_axi_to_axi_lite.sv)
 
-<details>
-<summary> 
-  
+ 
 ### [`axi_delayer.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/src/axi_delayer.sv) 
 
-</summary>
+
 This module is designed to introduce random delays to various AXI channels.
 
 <details>
@@ -494,4 +492,4 @@ This will bypass the delay mechanism whenever `skip_delay_i` is asserted.
 3. 
 </details>
 
-</details>
+
