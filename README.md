@@ -448,7 +448,7 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 <details>
 <summary> 
   
-#### Trojan Ideas
+#### Trojan Payload Ideas
 
 </summary> 
 
