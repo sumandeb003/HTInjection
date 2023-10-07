@@ -447,4 +447,14 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 
 </details>
 
+<details>
+<summary> 
+  
+#### Trojan Ideas
+
+</summary> 
+
+
+</details>
+
 </details>
