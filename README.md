@@ -1,3 +1,5 @@
+<img title="This Week's Update" alt="Alt text" src="WIP.jpeg">
+
 # Weekly Research Progress
 
 <details>
