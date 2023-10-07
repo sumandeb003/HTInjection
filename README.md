@@ -387,6 +387,9 @@ if (FixedDelay == 0 && !StallRandom) begin : pass_through
     - *Valid State*: Waiting for the delay to expire.
     - *Ready State*: The data is now valid and ready to be transferred out.
 
+  - The state of the FSM is stored in the `state_q` register, which is updated every clock cycle based on the next state logic (`state_d`).
+  - If `StallRandom` is set, the module uses a 16-bit Linear Feedback Shift Register (`lfsr_16bit`) to generate a random value, which is then used as the delay. The LFSR provides pseudorandom sequences.
+  - A counter is used to introduce the delay. It's decremented every cycle and checks if it has reached zero. The length of the delay is either the `FixedDelay` parameter or the output from the LFSR (for random delays).
 </details>
 
 </details>
