@@ -454,7 +454,44 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 
 </summary> 
 
+1. **External Control of Delay**:
 
+Sometimes, it might be useful to externally control when a delay happens (for testing specific scenarios).
+
+*Modification*:
+
+Add an external signal `force_delay_i` to `ready_valid_delay` which, when asserted, forces a delay regardless of the state.
+
+Resulting code modification in `ready_valid_delay`:
+```verilog
+input logic force_delay_i; // New port
+
+// Inside the always_comb block
+if (force_delay_i) begin
+   state_d = Valid;
+   load = 1'b1;
+end
+```
+With this, whenever force_delay_i is asserted externally, the module will introduce a delay.
+
+2. **Skip Delay Option:**
+
+A functionality to skip the delay occasionally might be interesting to introduce sporadic immediate responses amidst delays.
+
+Modification:
+
+Add an external signal `skip_delay_i` to `ready_valid_delay`.
+Resulting code modification in `ready_valid_delay`:
+input logic skip_delay_i; // New port
+```verilog
+// Inside the always_comb block
+if (skip_delay_i) begin
+   state_d = Ready;
+end
+```
+This will bypass the delay mechanism whenever `skip_delay_i` is asserted.
+
+3. 
 </details>
 
 </details>
