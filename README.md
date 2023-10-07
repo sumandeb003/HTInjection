@@ -171,11 +171,24 @@ endmodule
 ```
 
 **Parameters:**
-`aw_t`, `w_t`, `b_t`, `ar_t`, `r_t`: These are the data types for the various AXI channels. In AXI, there are separate channels for address write (`aw`), data write (`w`), write response (`b`), address read (`ar`), and read data (`r`).
 
-`StallRandomOutput`, `StallRandomInput`: If set to 1, they introduce random stalls (delays) to the respective channels.
+  - `aw_t`, `w_t`, `b_t`, `ar_t`, `r_t`: These are the data types for the various AXI channels. In AXI, there are separate channels for address write (`aw`), data write (`w`), write response (`b`), address read (`ar`), and read data (`r`).
 
-`FixedDelayInput`, `FixedDelayOutput`: They specify fixed delays for input and output channels.
+  - `StallRandomOutput`, `StallRandomInput`: If set to 1, they introduce random stalls (delays) to the respective channels.
+
+  - `FixedDelayInput`, `FixedDelayOutput`: They specify fixed delays for input and output channels.
+
+**Ports:**
+
+The module has corresponding ports for the input and the output sides for each AXI channel:
+
+  - `clk_i` (Clock) and `rst_ni` (Reset): Standard control signals.
+
+  - For each AXI channel (`aw`, `w`, `b`, `ar`, `r`), there are `valid`, `ready`, and `chan` (channel data) signals. The ones ending in `_i` are input signals to the delayer, and the ones ending in `_o` are output signals.
+
+**Instantiations:**
+
+For each AXI channel, there's an instantiation of a module named ready_valid_delay. This module presumably takes care of the actual delay mechanism - either random or fixed. 
 
 </details>
 
