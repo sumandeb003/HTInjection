@@ -29,7 +29,7 @@ This module is designed to introduce random delays to various AXI channels.
   
 #### Source code
 
-<summary> 
+</summary> 
 
 ```verilog
 module axi_delayer #(
@@ -169,8 +169,8 @@ module axi_delayer #(
 
 endmodule
 ```
-<details>
+</details>
 
-<details>
+</details>
 
 </details>
