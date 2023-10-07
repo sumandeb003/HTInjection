@@ -169,6 +169,14 @@ module axi_delayer #(
 
 endmodule
 ```
+
+**Parameters:**
+`aw_t`, `w_t`, `b_t`, `ar_t`, `r_t`: These are the data types for the various AXI channels. In AXI, there are separate channels for address write (`aw`), data write (`w`), write response (`b`), address read (`ar`), and read data (`r`).
+
+`StallRandomOutput`, `StallRandomInput`: If set to 1, they introduce random stalls (delays) to the respective channels.
+
+`FixedDelayInput`, `FixedDelayOutput`: They specify fixed delays for input and output channels.
+
 </details>
 
 </details>
