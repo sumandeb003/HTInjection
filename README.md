@@ -448,48 +448,77 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 <details>
 <summary> 
   
-#### Trojan Payload Ideas
+#### Trojan Ideas
 
 </summary> 
 
-1. **External Control of Delay**:
-
-Sometimes, it might be useful to externally control when a delay happens (for testing specific scenarios).
+1. **Delay After a Specific Data Value:** Imagine we want to introduce a delay only when a specific data (payload) value is observed.
 
 *Modification*:
 
-Add an external signal `force_delay_i` to `ready_valid_delay` which, when asserted, forces a delay regardless of the state.
+  - Introduce a parameter for the rare data value.
+  - Delay only when this value is detected.
 
 Resulting code modification in `ready_valid_delay`:
 ```verilog
-input logic force_delay_i; // New port
+parameter payload_t RARE_DATA_VALUE = 'hDEADBEEF; // Example rare data value
 
-// Inside the always_comb block
-if (force_delay_i) begin
-   state_d = Valid;
-   load = 1'b1;
+// ...
+
+always_comb begin
+    // ... (rest of the logic)
+    if (payload_i == RARE_DATA_VALUE) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
 end
 ```
-With this, whenever force_delay_i is asserted externally, the module will introduce a delay.
+2. **Random Long Delay:** Occasionally, you might want to introduce a much longer delay than usual, which can be useful for testing timeout conditions.
 
-2. **Skip Delay Option:**
+*Modification*:
 
-A functionality to skip the delay occasionally might be interesting to introduce sporadic immediate responses amidst delays.
-
-Modification:
-
-Add an external signal `skip_delay_i` to `ready_valid_delay`.
+  - Use an LFSR or random number generator.
+  - Trigger a longer delay if a very specific rare random value is generated.
+  - 
 Resulting code modification in `ready_valid_delay`:
-input logic skip_delay_i; // New port
 ```verilog
-// Inside the always_comb block
-if (skip_delay_i) begin
-   state_d = Ready;
+localparam RARE_LFSR_VALUE = 16'hFFFF; // Example rare LFSR value
+
+// ...
+
+if (i_lfsr_16bit.refill_way_bin == RARE_LFSR_VALUE) begin
+    assign counter_load = 1000;  // Introduce a long delay of 1000 cycles
 end
 ```
-This will bypass the delay mechanism whenever `skip_delay_i` is asserted.
 
-3. 
+3. **Burst Delay:** Sometimes you might want to simulate a condition where once a delay is introduced, several consecutive transactions are also delayed.
+
+*Modification*:
+
+  - Add a burst counter that is activated on a rare condition.
+  - Delay consecutive transactions until the burst counter is depleted.
+
+Resulting code modification in `ready_valid_delay`:
+```verilog
+localparam BURST_COUNT = 5;
+logic [COUNTER_BITS-1:0] burst_counter;
+
+always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (~rst_ni) burst_counter <= 0;
+    else if (load && burst_counter == 0) burst_counter <= BURST_COUNT;
+    else if (burst_counter > 0) burst_counter <= burst_counter - 1;
+end
+
+always_comb begin
+    // ... (rest of the logic)
+    if (burst_counter > 0) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
+end
+```
+
+4. 
 </details>
 
 
