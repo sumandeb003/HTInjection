@@ -371,6 +371,22 @@ Standard handshaking signals are:
   - `ready_i`: Indicates that the next stage/module is ready to receive data.
   - `payload_o`: Data output.
 
+**My Understanding of the Module Functionality:**
+
+  - If there's no delay (neither fixed nor random), the module simply passes the signals through:
+
+```verilog
+if (FixedDelay == 0 && !StallRandom) begin : pass_through
+     assign ready_o = ready_i;
+     assign valid_o = valid_i;
+     assign payload_o = payload_i;
+ end
+```
+  - If delays are introduced, the module uses a finite state machine (FSM) with three states: `Idle`, `Valid`, and `Ready`.
+    - *Idle State*: Awaiting for the valid signal to be asserted.
+    - *Valid State*: Waiting for the delay to expire.
+    - *Ready State*: The data is now valid and ready to be transferred out.
+
 </details>
 
 </details>
