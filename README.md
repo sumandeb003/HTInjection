@@ -477,7 +477,7 @@ end
 
   - Use an LFSR or random number generator.
   - Trigger a longer delay if a very specific rare random value is generated.
-  - 
+
 Resulting code modification in `ready_valid_delay`:
 ```verilog
 localparam RARE_LFSR_VALUE = 16'hFFFF; // Example rare LFSR value
