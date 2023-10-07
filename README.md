@@ -516,7 +516,99 @@ always_comb begin
 end
 ```
 
+**I thought of some rare conditions that can be used to trigger the above trojans. They are as follows:**
 
+1. **Echo Delay:** Imagine introducing a delay when the same data value appears consecutively. This can be interesting for testing repetitive data patterns.
+
+*Modification*: 
+
+  - Store the last data value.
+  - Check if the current data matches the previous one.
+  - 
+Resulting code modification in `ready_valid_delay`:
+```verilog
+payload_t last_data;
+
+always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (~rst_ni) last_data <= '0;
+    else last_data <= payload_i;
+end
+
+always_comb begin
+    // ... (rest of the logic)
+    if (payload_i == last_data) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
+end
+```
+
+2. **Delay on Rare Sequence:** Introduce a delay when a rare sequence of valid signals is detected, such as a pattern of alternating valids (1, 0, 1, 0, 1).
+
+*Modification*:
+  - Implement a small FSM or counter to detect the pattern.
+
+Resulting code modification in `ready_valid_delay`:
+
+```verilog
+logic [2:0] valid_sequence;  // Stores a 3-bit pattern
+
+always_ff @(posedge clk_i or negedge rst_ni) begin
+    if (~rst_ni) valid_sequence <= '0;
+    else valid_sequence <= {valid_sequence[1:0], valid_i};
+end
+
+always_comb begin
+    // ... (rest of the logic)
+    if (valid_sequence == 3'b101) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
+end
+```
+
+3. **Power-of-Two Delay:** A delay is introduced only when the data is a power of two. This can be useful to see how your system responds to specific data patterns.
+
+*Modification*:
+  - Check if data is a power of two.
+
+Resulting code modification in `ready_valid_delay`:
+
+```verilog
+function logic is_power_of_two(payload_t data);
+    return (data != 0) && ((data & (data - 1)) == 0);
+endfunction
+
+always_comb begin
+    // ... (rest of the logic)
+    if (is_power_of_two(payload_i)) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
+end
+```
+
+4. **Rare Parity Delay:** Introduce a delay only when the data has even parity (rare if your data is generally odd-parity).
+
+*Modification*:
+  - Check the parity of the data.
+
+Resulting code modification in `ready_valid_delay`:
+
+```verilog
+function logic has_even_parity(payload_t data);
+    int num_ones = $countones(data);
+    return (num_ones % 2 == 0);
+endfunction
+
+always_comb begin
+    // ... (rest of the logic)
+    if (has_even_parity(payload_i)) begin
+        state_d = Valid;
+        load = 1'b1;
+    end
+end
+```
 
 </details>
 
