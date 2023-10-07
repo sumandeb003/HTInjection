@@ -450,7 +450,7 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 
 </summary> 
 
-1. **Delay After a Specific Data Value:** Imagine we want to introduce a delay only when a specific data (payload) value is observed.
+1. **Delay After a Specific Data Value:** We can introduce a delay only when a specific data (payload) value is observed.
 
 *Modification*:
 
@@ -471,7 +471,7 @@ always_comb begin
     end
 end
 ```
-2. **Random Long Delay:** Occasionally, you might want to introduce a much longer delay than usual, which can be useful for testing timeout conditions.
+2. **Random Long Delay:** Occasionally, we can introduce a much longer delay than usual.
 
 *Modification*:
 
@@ -489,7 +489,7 @@ if (i_lfsr_16bit.refill_way_bin == RARE_LFSR_VALUE) begin
 end
 ```
 
-3. **Burst Delay:** Sometimes you might want to simulate a condition where once a delay is introduced, several consecutive transactions are also delayed.
+3. **Burst Delay:** We can simulate a condition where once a delay is introduced, several consecutive transactions are also delayed.
 
 *Modification*:
 
@@ -518,7 +518,7 @@ end
 
 **I thought of some rare conditions that can be used to trigger the above trojans. They are as follows:**
 
-1. **Echo Delay:** Imagine introducing a delay when the same data value appears consecutively. This can be interesting for testing repetitive data patterns.
+1. **Echo Delay:** Imagine introducing a delay when the same data value appears consecutively. 
 
 *Modification*: 
 
@@ -567,7 +567,7 @@ always_comb begin
 end
 ```
 
-3. **Power-of-Two Delay:** A delay is introduced only when the data is a power of two. This can be useful to see how your system responds to specific data patterns.
+3. **Power-of-Two Delay:** A delay is introduced only when the data is a power of two.
 
 *Modification*:
   - Check if data is a power of two.
