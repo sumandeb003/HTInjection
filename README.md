@@ -443,8 +443,6 @@ In conclusion, the FSM ensures that once the input data is valid, it either dire
 
 </details>
 
-</details>
-
 <details>
 <summary> 
   
@@ -518,7 +516,9 @@ always_comb begin
 end
 ```
 
-4. 
+
+
 </details>
 
+</details>
 
