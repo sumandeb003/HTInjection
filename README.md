@@ -19,12 +19,18 @@ After my experience inserting trojans in the Ariane SoC, I realized that it is a
 <details>
 <summary> 
   
-### [`axi_delayer.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/src/axi_delayer.sv): 
+### [`axi_delayer.sv`](https://github.com/pulp-platform/axi/blob/de1af467229315ee6af31fea96664c7aae5638a9/src/axi_delayer.sv) 
 
 </summary>
 This module is designed to introduce random delays to various AXI channels.
 
-Source code:
+<details>
+<summary> 
+  
+#### Source code
+
+<summary> 
+
 ```verilog
 module axi_delayer #(
     parameter type aw_t = logic,
@@ -163,6 +169,8 @@ module axi_delayer #(
 
 endmodule
 ```
+<details>
+
 <details>
 
 </details>
