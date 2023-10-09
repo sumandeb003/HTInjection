@@ -5,7 +5,7 @@
 <details>
 <summary> 
   
-### Update as of Oct 2, 2023 
+### Update as of Oct 9, 2023 
 
 </summary>
 After my experience inserting trojans in the Ariane SoC, I realized that it is always better to insert trojans into a hardware design that has a testbench written for it. It will reduce a lot of my efforts while verifying the functionality of the trojan(s) inserted. I went through the code base of [Ariane](https://github.com/lowRISC/ariane/tree/master). Only 5 of the modules used in Ariane have testbenches written for them. So, I will target them for trojan insertion. These modules and their testbenches are:
